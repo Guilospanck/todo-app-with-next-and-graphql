@@ -1,0 +1,15 @@
+{
+  "name": "todo-app-with-next-and-graphql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Guilospanck/todo-app-with-next-and-graphql.git",
+  "author": "Guilherme Pereira <guilherme.rp2010@hotmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^4.3.1",
+    "graphql-scalars": "^1.18.0"
+  },
+  "devDependencies": {
+    "prisma": "^4.3.1"
+  }
+}
