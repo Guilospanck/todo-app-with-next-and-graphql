@@ -1,6 +1,6 @@
 import { makeSchema } from "nexus"
 import { join } from "path"
-import * as types from './graphql'
+import * as types from './interfaces/graphql'
 
 export const schema = makeSchema({
   types,
@@ -9,7 +9,7 @@ export const schema = makeSchema({
     typegen: join(process.cwd(), 'nexus-typegen.ts')
   },
   contextType: {
-    module: join(process.cwd(), './src/context.ts'),
+    module: join(process.cwd(), './src/infrastructure/middlewares/prisma/context_middleware.ts'),
     export: 'Context'
   }
 })

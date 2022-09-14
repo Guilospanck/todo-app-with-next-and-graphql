@@ -8,14 +8,17 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 type Mutation {
+  deleteNote(id: Int!): Note!
   postNote(description: String, title: String!): Note!
 }
 
 type Note {
   createdAt: DateTime!
+  deletedAt: DateTime
   description: String
   id: Int!
   title: String!
+  updatedAt: DateTime!
 }
 
 type Query {

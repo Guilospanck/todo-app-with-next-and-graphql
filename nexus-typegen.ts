@@ -4,7 +4,7 @@
  */
 
 
-import type { Context } from "./src/context"
+import type { Context } from "./src/infrastructure/middlewares/prisma/context_middleware"
 import type { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
@@ -47,9 +47,11 @@ export interface NexusGenObjects {
   Mutation: {};
   Note: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    deletedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     description?: string | null; // String
     id: number; // Int!
     title: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Query: {};
 }
@@ -66,13 +68,16 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
   Mutation: { // field return type
+    deleteNote: NexusGenRootTypes['Note']; // Note!
     postNote: NexusGenRootTypes['Note']; // Note!
   }
   Note: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    deletedAt: NexusGenScalars['DateTime'] | null; // DateTime
     description: string | null; // String
     id: number; // Int!
     title: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Query: { // field return type
     getAllNotes: Array<NexusGenRootTypes['Note'] | null> | null; // [Note]
@@ -81,13 +86,16 @@ export interface NexusGenFieldTypes {
 
 export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
+    deleteNote: 'Note'
     postNote: 'Note'
   }
   Note: { // field return type name
     createdAt: 'DateTime'
+    deletedAt: 'DateTime'
     description: 'String'
     id: 'Int'
     title: 'String'
+    updatedAt: 'DateTime'
   }
   Query: { // field return type name
     getAllNotes: 'Note'
@@ -96,6 +104,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    deleteNote: { // args
+      id: number; // Int!
+    }
     postNote: { // args
       description?: string | null; // String
       title: string; // String!
