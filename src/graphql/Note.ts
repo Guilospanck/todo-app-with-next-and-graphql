@@ -15,8 +15,8 @@ export const NoteQuery = extendType({
   definition(t) {
     t.list.field('getAllNotes', {
       type: 'Note',
-      resolve(parent, ags, context) {
-        return []
+      resolve(parent, args, context) {
+        return context.prisma.note.findMany()
       }
     })
   },
