@@ -1,4 +1,4 @@
-import { extendType, objectType } from 'nexus'
+import { extendType, nonNull, objectType, stringArg } from 'nexus'
 
 export const Note = objectType({
   name: 'Note',
@@ -17,6 +17,27 @@ export const NoteQuery = extendType({
       type: 'Note',
       resolve(parent, args, context) {
         return context.prisma.note.findMany()
+      }
+    })
+  },
+})
+
+export const NoteMutation = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.nonNull.field('postNote', {
+      type: 'Note',
+      args: {
+        title: nonNull(stringArg()),
+        description: stringArg(),
+      },
+      async resolve(parent, args, context) {
+        return context.prisma.note.create({
+          data: {
+            description: args.description,
+            title: args.title
+          }
+        })
       }
     })
   },
