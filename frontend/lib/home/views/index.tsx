@@ -11,7 +11,7 @@ const HomeView = ({ viewModel }: HomeViewProps) => {
       return (
         <Fragment key={item.id}>
           <p>{item.id}</p>
-          <p>{item.title}</p>
+          <h1 className="text-3xl font-bold underline">{item.title}</h1>
           <p>{item.description}</p>
           <p>{item.createdAt}</p>
           <p>{item.updatedAt}</p>
