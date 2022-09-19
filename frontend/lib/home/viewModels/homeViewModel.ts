@@ -8,7 +8,8 @@ type HomeViewModelProps = {
 }
 export interface IUseHomeViewModel {
   todoItems: TodoItem[],
-  tableItems: TableProps
+  tableItems: TableProps,
+  addNewNote: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const useHomeViewModel = ({ getTodoItemsUsecase }: HomeViewModelProps): IUseHomeViewModel => {
@@ -31,9 +32,15 @@ const useHomeViewModel = ({ getTodoItemsUsecase }: HomeViewModelProps): IUseHome
     setTableItems({ headers, body })
   }, [todoItems])
 
+  const addNewNote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
+    console.log('here')
+  }
+
   return {
     todoItems,
-    tableItems
+    tableItems,
+    addNewNote
   }
 }
 

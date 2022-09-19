@@ -8,10 +8,10 @@ export enum ButtonColor {
 type ButtonProps = {
   content: string,
   color?: ButtonColor
+  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const Button = (props: ButtonProps) => {
-
   const getColor = (): string => {
     if(!props.color) {
       return styles.green_button
@@ -20,7 +20,7 @@ const Button = (props: ButtonProps) => {
   }
 
   return (
-    <button type="button" className={getColor()}>
+    <button type="button" className={getColor()} onClick={(e) => props.onClick(e)}>
       {props.content}
     </button>
   )

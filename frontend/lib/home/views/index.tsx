@@ -11,7 +11,7 @@ const HomeView = ({ viewModel }: HomeViewProps) => {
   return (
     <div className="container mx-auto my-1">
       <div className="flex justify-end">
-        <Button content="Add" />
+        <Button content="Add" onClick={viewModel.addNewNote} />
       </div>
       <div className={styles.table_container}>
         <Table key={'table'} headers={viewModel.tableItems.headers} body={viewModel.tableItems.body} />
