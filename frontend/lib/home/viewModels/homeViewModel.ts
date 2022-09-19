@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react"
 import { TableProps } from "../../../components/table"
 import { TodoItem } from "../types/todoitem"
-import CreateUpdateNoteUsecase from "../useCases/createUpdateNoteUsecase"
+import { ICreateUpdateNoteUsecase } from "../useCases/createUpdateNoteUsecase"
 import { IGetTodoItemsUsecase } from "../useCases/getTodoItemsUsecase"
 
 type HomeViewModelProps = {
   getTodoItemsUsecase: IGetTodoItemsUsecase
+  createUpdateNoteUsecase: ICreateUpdateNoteUsecase
 }
 export interface IUseHomeViewModel {
   todoItems: TodoItem[],
   tableItems: TableProps,
-  addNewNote: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  addNewNote: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => Promise<void>
 }
 
-const useHomeViewModel = ({ getTodoItemsUsecase }: HomeViewModelProps): IUseHomeViewModel => {
+const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase }: HomeViewModelProps): IUseHomeViewModel => {
   const [todoItems, setTodoItems] = useState<TodoItem[]>([])
   const [tableItems, setTableItems] = useState<TableProps>({ headers: [], body: [] })
 
@@ -33,9 +34,9 @@ const useHomeViewModel = ({ getTodoItemsUsecase }: HomeViewModelProps): IUseHome
     setTableItems({ headers, body })
   }, [todoItems])
 
-  const addNewNote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const addNewNote = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    CreateUpdateNoteUsecase().create({ title: 'Test', description: 'Test description' } as TodoItem)
+    await createUpdateNoteUsecase.create({ title: 'Test', description: 'Test description' } as TodoItem)
   }
 
   return {
