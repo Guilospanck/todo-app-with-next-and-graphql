@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react"
+import { TableProps } from "../../../components/table"
 import { TodoItem } from "../types/todoitem"
 import { IGetTodoItemsUsecase } from "../useCases/getTodoItemsUsecase"
 
 type HomeViewModelProps = {
   getTodoItemsUsecase: IGetTodoItemsUsecase
 }
-
 export interface IUseHomeViewModel {
-  todoItems: TodoItem[]
+  todoItems: TodoItem[],
+  tableItems: TableProps
 }
 
 const useHomeViewModel = ({ getTodoItemsUsecase }: HomeViewModelProps): IUseHomeViewModel => {
-
   const [todoItems, setTodoItems] = useState<TodoItem[]>([])
+  const [tableItems, setTableItems] = useState<TableProps>({ headers: [], body: [] })
 
   useEffect(() => {
     const getAllTodoItems = async () => {
@@ -22,8 +23,17 @@ const useHomeViewModel = ({ getTodoItemsUsecase }: HomeViewModelProps): IUseHome
     getAllTodoItems()
   }, [])
 
+  useEffect(() => {
+    if (todoItems.length === 0) { return }
+    const headers = Object.keys(todoItems[0]).filter(item => item !== '__typename')
+    const body: any[][] = []
+    todoItems.map(item => body.push(Object.values(item).filter(item => item !== 'Note')))
+    setTableItems({ headers, body })
+  }, [todoItems])
+
   return {
-    todoItems
+    todoItems,
+    tableItems
   }
 }
 
