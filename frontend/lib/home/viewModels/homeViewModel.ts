@@ -9,12 +9,16 @@ type HomeViewModelProps = {
   createUpdateNoteUsecase: ICreateUpdateNoteUsecase
 }
 export interface IUseHomeViewModel {
+  showModal: boolean,
   todoItems: TodoItem[],
   tableItems: TableProps,
-  addNewNote: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => Promise<void>
+  addNewNote: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => Promise<void>,
+  onModalCancelClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+  onModalConfirmClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
 }
 
 const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase }: HomeViewModelProps): IUseHomeViewModel => {
+  const [showModal, setShowModal] = useState<boolean>(false)
   const [todoItems, setTodoItems] = useState<TodoItem[]>([])
   const [tableItems, setTableItems] = useState<TableProps>({ headers: [], body: [] })
 
@@ -36,13 +40,29 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase }: Home
 
   const addNewNote = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    await createUpdateNoteUsecase.create({ title: 'Test', description: 'Test description' } as TodoItem)
+    setShowModal(!showModal)
+    // await createUpdateNoteUsecase.create({ title: 'Test', description: 'Test description' } as TodoItem)
+  }
+
+  const onModalCancelClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
+    console.log('modal cancelled')
+    setShowModal(!showModal)
+  }
+
+  const onModalConfirmClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
+    console.log('modal confirmed')
+    setShowModal(!showModal)
   }
 
   return {
+    showModal,
     todoItems,
     tableItems,
-    addNewNote
+    addNewNote,
+    onModalCancelClick,
+    onModalConfirmClick
   }
 }
 
