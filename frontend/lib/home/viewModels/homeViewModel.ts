@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { TableProps } from "../../../components/table"
 import { TodoItem } from "../types/todoitem"
+import CreateUpdateNoteUsecase from "../useCases/createUpdateNoteUsecase"
 import { IGetTodoItemsUsecase } from "../useCases/getTodoItemsUsecase"
 
 type HomeViewModelProps = {
@@ -34,7 +35,7 @@ const useHomeViewModel = ({ getTodoItemsUsecase }: HomeViewModelProps): IUseHome
 
   const addNewNote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    console.log('here')
+    CreateUpdateNoteUsecase().create({ title: 'Test', description: 'Test description' } as TodoItem)
   }
 
   return {
