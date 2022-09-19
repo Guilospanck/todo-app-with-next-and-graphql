@@ -1,2 +1,4 @@
 
-
+.table_container {
+  @apply container mx-auto my-1 overflow-x-auto shadow-md sm:rounded-lg
+}
