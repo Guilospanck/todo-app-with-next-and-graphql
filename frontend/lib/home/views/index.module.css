@@ -3,3 +3,7 @@
 .default_text {
   @apply text-base font-medium text-teal-700
 }
+
+.default_td_th {
+  @apply py-3 px-6
+}
