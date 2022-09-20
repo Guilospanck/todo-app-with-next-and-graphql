@@ -12,7 +12,7 @@ export interface IUseHomeViewModel {
   showModal: boolean,
   todoItems: TodoItem[],
   tableItems: TableProps,
-  addNewNote: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => Promise<void>,
+  addNewNote: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
   onModalCancelClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
   onModalConfirmClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
 }
@@ -38,21 +38,32 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase }: Home
     setTableItems({ headers, body })
   }, [todoItems])
 
-  const addNewNote = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const addNewNote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
     setShowModal(!showModal)
-    // await createUpdateNoteUsecase.create({ title: 'Test', description: 'Test description' } as TodoItem)
   }
 
   const onModalCancelClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    console.log('modal cancelled')
     setShowModal(!showModal)
   }
 
-  const onModalConfirmClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onModalConfirmClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    console.log('modal confirmed')
+
+    const title = (document.getElementById("title") as HTMLInputElement)?.value
+    const description = (document.getElementById("description") as HTMLInputElement)?.value
+
+    if(!title || title?.length === 0) {
+      alert('Title is required.')
+      return
+    }
+
+    const result = await createUpdateNoteUsecase.create({ title, description } as TodoItem)
+    const todoItemsClone: TodoItem[] = JSON.parse(JSON.stringify(todoItems))
+    todoItemsClone.push(result)
+
+    setTodoItems(todoItemsClone)
     setShowModal(!showModal)
   }
 
