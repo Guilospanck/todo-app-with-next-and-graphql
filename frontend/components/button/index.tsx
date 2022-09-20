@@ -7,8 +7,9 @@ export enum ButtonColor {
 
 type ButtonProps = {
   content: string,
-  color?: ButtonColor
-  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  color?: ButtonColor,
+  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+  classes?: string
 }
 
 const Button = (props: ButtonProps) => {
@@ -20,7 +21,7 @@ const Button = (props: ButtonProps) => {
   }
 
   return (
-    <button type="button" className={getColor()} onClick={(e) => props.onClick(e)}>
+    <button type="button" className={`${getColor()} ${props.classes}`} onClick={(e) => props.onClick(e)}>
       {props.content}
     </button>
   )

@@ -3,7 +3,8 @@ import styles from './index.module.css'
 
 export type TableProps = {
   headers: string[],
-  body: any[][] // [[id, name, cycles], [id, name, cycles], [id, name, cycles]]
+  body: any[][], // [[id, name, cycles], [id, name, cycles], [id, name, cycles]]
+  onDeleteClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const Table = (props: TableProps) => {
@@ -14,6 +15,11 @@ const Table = (props: TableProps) => {
           {
             props.headers.map((head, idx) => <th key={`table-header-row-${idx}`} scope="col" className={styles.default_td_th}>{head}</th>)
           }
+
+          {/* Actions */}
+          {
+            props.onDeleteClick !== undefined && <th key={`table-header-actions`} scope="col" className={styles.default_td_th}>Actions</th>
+          }
         </tr>
       </thead>
       <tbody>
@@ -22,23 +28,22 @@ const Table = (props: TableProps) => {
             return (
               <tr key={`table-body-row-${idx}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 {
-                  items.map((item, secIdx) => {
-                    return (
-                      <td key={`table-body-row-${idx}-column-${secIdx}`} className={styles.default_td_th}>
-                        {item}
-                        {
-                          secIdx === items.length - 1 && <Button content="Delete" onClick={() => console.log('hey')} color={ButtonColor.RED} />
-                        }
-                      </td>
-                    )
-                  })
+                  items.map((item, secIdx) => <td key={`table-body-row-${idx}-column-${secIdx}`} className={styles.default_td_th}>{item}</td>)
+                }
+
+                {/* Actions */}
+                {
+                  props.onDeleteClick !== undefined &&
+                  <td key={`table-body-row-${idx}-actions`} className={styles.default_td_th}>
+                    <Button content="Delete" color={ButtonColor.RED} onClick={(e) => props.onDeleteClick!(e)} />
+                  </td>
                 }
               </tr>
             )
           })
         }
       </tbody>
-    </table>
+    </table >
   )
 }
 

@@ -13,6 +13,7 @@ export interface IUseHomeViewModel {
   todoItems: TodoItem[],
   tableItems: TableProps,
   addNewNote: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+  onDeleteNoteClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
   onModalCancelClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
   onModalConfirmClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
 }
@@ -41,6 +42,11 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase }: Home
   const addNewNote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
     setShowModal(!showModal)
+  }
+
+  const onDeleteNoteClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
+    console.log('delete clicked')
   }
 
   const onModalCancelClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -72,8 +78,9 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase }: Home
     todoItems,
     tableItems,
     addNewNote,
+    onDeleteNoteClick,
     onModalCancelClick,
-    onModalConfirmClick
+    onModalConfirmClick,
   }
 }
 
