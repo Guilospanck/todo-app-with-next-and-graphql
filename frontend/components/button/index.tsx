@@ -13,7 +13,7 @@ type ButtonProps = {
 
 const Button = (props: ButtonProps) => {
   const getColor = (): string => {
-    if(!props.color) {
+    if(props.color === undefined) {
       return styles.green_button
     }
     return props.color === ButtonColor.GREEN ? styles.green_button : styles.red_button

@@ -1,3 +1,4 @@
+import Button, { ButtonColor } from '../button'
 import styles from './index.module.css'
 
 export type TableProps = {
@@ -21,7 +22,16 @@ const Table = (props: TableProps) => {
             return (
               <tr key={`table-body-row-${idx}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 {
-                  items.map((item, secIdx) => <td key={`table-body-row-${idx}-column-${secIdx}`} className={styles.default_td_th}>{item}</td>)
+                  items.map((item, secIdx) => {
+                    return (
+                      <td key={`table-body-row-${idx}-column-${secIdx}`} className={styles.default_td_th}>
+                        {item}
+                        {
+                          secIdx === items.length - 1 && <Button content="Delete" onClick={() => console.log('hey')} color={ButtonColor.RED} />
+                        }
+                      </td>
+                    )
+                  })
                 }
               </tr>
             )
