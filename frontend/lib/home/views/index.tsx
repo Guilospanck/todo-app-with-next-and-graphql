@@ -49,7 +49,12 @@ const HomeView = ({ viewModel }: HomeViewProps) => {
           <Button content="Add" onClick={viewModel.addNewNote} />
         </div>
         <div className={styles.table_container}>
-          <Table key={'table'} headers={viewModel.tableItems.headers} body={viewModel.tableItems.body} onDeleteClick={viewModel.onDeleteNoteClick} />
+          {
+            viewModel.tableItems.headers.length !== 0 ?
+              <Table key={'table'} headers={viewModel.tableItems.headers} body={viewModel.tableItems.body} onDeleteClick={viewModel.onDeleteNoteClick} />
+              :
+              <p>No data.</p>
+          }
         </div>
       </div>
     </>

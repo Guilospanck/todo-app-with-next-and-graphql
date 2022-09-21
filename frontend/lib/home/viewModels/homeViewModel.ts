@@ -35,7 +35,11 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase }: Home
     if (todoItems.length === 0) { return }
     const headers = Object.keys(todoItems[0]).filter(item => item !== '__typename' && item !== 'deletedAt')
     const body: any[][] = []
-    todoItems.map(item => body.push(Object.values(item).filter(item => item && item !== 'Note')))
+    todoItems.map(item => {
+      const items = Object.values(item)
+      const itemsLength = items.length
+      body.push(items.filter((item, idx) => item !== 'Note' && idx !== itemsLength - 1)) // remove 'deletedAt' and 'Note'
+    })
     setTableItems({ headers, body })
   }, [todoItems])
 
