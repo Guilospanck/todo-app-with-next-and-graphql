@@ -4,7 +4,7 @@ import styles from './index.module.css'
 export type TableProps = {
   headers: string[],
   body: any[][], // [[id, name, cycles], [id, name, cycles], [id, name, cycles]]
-  onDeleteClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onDeleteClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => void
 }
 
 const Table = (props: TableProps) => {
@@ -35,7 +35,7 @@ const Table = (props: TableProps) => {
                 {
                   props.onDeleteClick !== undefined &&
                   <td key={`table-body-row-${idx}-actions`} className={styles.default_td_th}>
-                    <Button content="Delete" color={ButtonColor.RED} onClick={(e) => props.onDeleteClick!(e)} />
+                    <Button content="Delete" color={ButtonColor.RED} onClick={(e) => props.onDeleteClick!(e, items.at(0))} />
                   </td>
                 }
               </tr>

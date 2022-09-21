@@ -16,7 +16,6 @@ const CreateUpdateNoteUsecase = () => {
           description
           createdAt
           updatedAt
-          deletedAt
         }
       }
     `

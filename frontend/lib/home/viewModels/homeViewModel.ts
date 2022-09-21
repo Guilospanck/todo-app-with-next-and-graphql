@@ -1,20 +1,22 @@
-import { useEffect, useState } from "react"
-import Modal, { ModalType } from "../../../components/modal"
+import { useEffect, useRef, useState } from "react"
+import { ModalType } from "../../../components/modal"
 import { TableProps } from "../../../components/table"
 import { TodoItem } from "../types/todoitem"
 import { ICreateUpdateNoteUsecase } from "../useCases/createUpdateNoteUsecase"
+import { IDeleteNoteUsecase } from "../useCases/deleteNoteUsecase"
 import { IGetTodoItemsUsecase } from "../useCases/getTodoItemsUsecase"
 
 type HomeViewModelProps = {
   getTodoItemsUsecase: IGetTodoItemsUsecase
   createUpdateNoteUsecase: ICreateUpdateNoteUsecase
+  deleteNoteUsecase: IDeleteNoteUsecase
 }
 export interface IUseHomeViewModel {
   showModal: ShowModal,
   todoItems: TodoItem[],
   tableItems: TableProps,
   onAddNewNoteClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
-  onDeleteNoteClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+  onDeleteNoteClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => void,
   onModalCancelClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, modalType: ModalType) => void,
   onModalConfirmClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, modalType: ModalType) => void,
 }
@@ -23,10 +25,12 @@ type ShowModal = {
   [key in keyof typeof ModalType]: boolean
 }
 
-const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase }: HomeViewModelProps): IUseHomeViewModel => {
+const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase, deleteNoteUsecase }: HomeViewModelProps): IUseHomeViewModel => {
   const [showModal, setShowModal] = useState<ShowModal>({ ADD_NOTE_MODAL: false, DELETE_NODE_MODAL: false })
   const [todoItems, setTodoItems] = useState<TodoItem[]>([])
   const [tableItems, setTableItems] = useState<TableProps>({ headers: [], body: [] })
+
+  const deleteNoteRef = useRef<number | null >(null)
 
   useEffect(() => {
     const getAllTodoItems = async () => {
@@ -53,8 +57,9 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase }: Home
     setShowModal({ ...showModal, ADD_NOTE_MODAL: true })
   }
 
-  const onDeleteNoteClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onDeleteNoteClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
     e.preventDefault()
+    deleteNoteRef.current = id
     setShowModal({ ...showModal, DELETE_NODE_MODAL: true })
   }
 
@@ -72,15 +77,15 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase }: Home
         break
       }
       case ModalType.DELETE_NODE_MODAL: {
-        _deleteNote()
+        await _deleteNote()
         break
       }
       default: {
         break
       }
     }
-
-    setShowModal({ ...showModal, [modalType]: true })
+    
+    setShowModal({ ...showModal, [ModalType[modalType]]: false })
   }
 
   const _addNewNote = async () => {
@@ -99,8 +104,11 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase }: Home
     setTodoItems(todoItemsClone)
   }
 
-  const _deleteNote = () => {
-    console.log('note will be deleted')
+  const _deleteNote = async () => {
+    await deleteNoteUsecase.deleteNote(deleteNoteRef.current as number)
+    let todoItemsClones: TodoItem[] = JSON.parse(JSON.stringify(todoItems))
+    todoItemsClones = todoItemsClones.filter(item => Number(item.id) !== deleteNoteRef.current as number)
+    setTodoItems(todoItemsClones)
   }
 
   return {
