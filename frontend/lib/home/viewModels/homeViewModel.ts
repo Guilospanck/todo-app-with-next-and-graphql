@@ -21,7 +21,7 @@ export interface IUseHomeViewModel {
   onModalConfirmClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, modalType: ModalType) => void,
 }
 
-type ShowModal = {
+export type ShowModal = {
   [key in keyof typeof ModalType]: boolean
 }
 

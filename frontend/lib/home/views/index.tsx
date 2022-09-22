@@ -1,7 +1,7 @@
 import Button from "../../../components/button"
 import Modal, { ModalProps, ModalType } from "../../../components/modal"
 import Table from "../../../components/table"
-import { IUseHomeViewModel } from "../viewModels/homeViewModel"
+import { IUseHomeViewModel, ShowModal } from "../viewModels/homeViewModel"
 import styles from './index.module.css'
 
 type HomeViewProps = {
@@ -10,7 +10,7 @@ type HomeViewProps = {
 
 const HomeView = ({ viewModel }: HomeViewProps) => {
 
-  const onAddNewNoteClickModal = (): ModalProps => {
+  const addNoteModal = (): ModalProps => {
     const onCancelClick = viewModel.onModalCancelClick
     const onConfirmClick = viewModel.onModalConfirmClick
     const title = 'Add new Todo item'
@@ -62,20 +62,50 @@ const HomeView = ({ viewModel }: HomeViewProps) => {
     }
   }
 
+  const updateNoteModal = (): ModalProps => {
+    const onCancelClick = viewModel.onModalCancelClick
+    const onConfirmClick = viewModel.onModalConfirmClick
+    const title = 'Update Todo item'
+    const confirmTitle = 'Update'
+    const cancelTitle = 'Cancel'
+
+    const body =
+      <form className="flex flex-col gap-2">
+        <label className="text-sm">Title</label>
+        <input id="title" type={'text'} className="appearance-none border rounded py-1 px-3 leading-tight focus:outline-none focus:shadow-outline" />
+        <label className="text-sm">Description</label>
+        <input id="description" type={'text'} className="appearance-none border rounded py-1 px-3 leading-tight focus:outline-none focus:shadow-outline" />
+      </form>
+
+    return {
+      body,
+      cancelTitle,
+      confirmTitle,
+      onCancelClick,
+      onConfirmClick,
+      title,
+      modalType: ModalType.UPDATE_NODE_MODAL
+    }
+  }
+
   const modalFactory = (modalType: ModalType) => {
     let modalProps
 
     switch (modalType) {
       case ModalType.ADD_NOTE_MODAL: {
-        modalProps = onAddNewNoteClickModal()
+        modalProps = addNoteModal()
         break
       }
       case ModalType.DELETE_NODE_MODAL: {
         modalProps = deleteNoteModal()
         break
       }
+      case ModalType.UPDATE_NODE_MODAL: {
+        modalProps = updateNoteModal()
+        break
+      }
       default: {
-        modalProps = onAddNewNoteClickModal()
+        modalProps = addNoteModal()
         break
       }
     }
@@ -91,19 +121,25 @@ const HomeView = ({ viewModel }: HomeViewProps) => {
     />
   }
 
+  const renderProperModal = () => {
+    let returnElement = null
+
+    Object.keys(viewModel.showModal).forEach(modalType => {
+      if (viewModel.showModal[modalType as keyof typeof ModalType] === true) {
+        returnElement = (
+          <div className="absolute w-screen h-screen">
+            {modalFactory(ModalType[modalType as keyof typeof ModalType])}
+          </div>
+        )
+      }
+    })
+
+    return returnElement
+  }
+
   return (
     <>
-      {
-        viewModel.showModal &&
-          viewModel.showModal.ADD_NOTE_MODAL ?
-          <div className="absolute w-screen h-screen">
-            {modalFactory(ModalType.ADD_NOTE_MODAL)}
-          </div>
-          : viewModel.showModal.DELETE_NODE_MODAL ?
-            <div className="absolute w-screen h-screen">
-              {modalFactory(ModalType.DELETE_NODE_MODAL)}
-            </div> : null
-      }
+      {viewModel.showModal && renderProperModal()}
 
       <div className="container mx-auto my-1">
         <div className="flex justify-end">
