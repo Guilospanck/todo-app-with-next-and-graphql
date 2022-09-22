@@ -124,7 +124,24 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase, delete
   }
 
   const _updateNote = async () => {
-    console.log('will be updated')
+    const title = (document.getElementById("title") as HTMLInputElement)?.value
+    const description = (document.getElementById("description") as HTMLInputElement)?.value
+
+    if ((!title || title?.length === 0) && (!description || description?.length === 0)) {
+      alert('You need to provide some info.')
+      return
+    }
+
+    const id = updateNoteRef.current
+
+    const result = await createUpdateNoteUsecase.update(id as number, title, description)
+    const todoItemsClone: TodoItem[] = JSON.parse(JSON.stringify(todoItems))
+    todoItemsClone.filter(item => Number(item.id) === id).map(item => {
+      item.title = result.title
+      item.description = result.description
+    })
+
+    setTodoItems(todoItemsClone)
   }
 
   return {

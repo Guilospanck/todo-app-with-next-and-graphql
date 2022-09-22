@@ -4,6 +4,7 @@ import { TodoItem } from '../types/todoitem'
 
 export interface ICreateUpdateNoteUsecase {
   create: (note: TodoItem) => Promise<TodoItem>
+  update: (id: number, title?: string, description?: string) => Promise<TodoItem>
 }
 
 const CreateUpdateNoteUsecase = () => {
@@ -28,8 +29,30 @@ const CreateUpdateNoteUsecase = () => {
     return result.data.postNote
   }
 
+  const update = async (id: number, title?: string, description?: string): Promise<TodoItem> => {
+    const updateNote = gql`
+      mutation UpdateNote($id: Int!, $title: String, $description: String) {
+        updateNote(id: $id, title: $title, description: $description) {
+          id
+          title
+          description
+          createdAt
+          updatedAt
+        }
+      }
+    `
+
+    const result = await apolloClient.mutate({
+      mutation: updateNote,
+      variables: { id, title, description }
+    })
+
+    return result.data.updateNote
+  }
+
   return {
-    create
+    create,
+    update
   }
 }
 
