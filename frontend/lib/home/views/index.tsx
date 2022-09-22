@@ -148,7 +148,7 @@ const HomeView = ({ viewModel }: HomeViewProps) => {
         <div className={styles.table_container}>
           {
             viewModel.tableItems.headers.length !== 0 ?
-              <Table key={'table'} headers={viewModel.tableItems.headers} body={viewModel.tableItems.body} onDeleteClick={viewModel.onDeleteNoteClick} />
+              <Table key={'table'} headers={viewModel.tableItems.headers} body={viewModel.tableItems.body} onDeleteClick={viewModel.onDeleteNoteClick} onUpdateClick={viewModel.onUpdateNoteClick} />
               :
               <p>No data.</p>
           }

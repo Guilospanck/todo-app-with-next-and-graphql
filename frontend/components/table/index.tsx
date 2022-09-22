@@ -4,7 +4,8 @@ import styles from './index.module.css'
 export type TableProps = {
   headers: string[],
   body: any[][], // [[id, name, cycles], [id, name, cycles], [id, name, cycles]]
-  onDeleteClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => void
+  onDeleteClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => void,
+  onUpdateClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => void,
 }
 
 const Table = (props: TableProps) => {
@@ -18,7 +19,7 @@ const Table = (props: TableProps) => {
 
           {/* Actions */}
           {
-            props.onDeleteClick !== undefined && <th key={`table-header-actions`} scope="col" className={styles.default_td_th}>Actions</th>
+            (props.onDeleteClick !== undefined || props.onUpdateClick !== undefined) && <th key={`table-header-actions`} scope="col" className={styles.default_td_th}>Actions</th>
           }
         </tr>
       </thead>
@@ -34,8 +35,14 @@ const Table = (props: TableProps) => {
                 {/* Actions */}
                 {
                   props.onDeleteClick !== undefined &&
-                  <td key={`table-body-row-${idx}-actions`} className={styles.default_td_th}>
+                  <td key={`table-body-row-${idx}-actions-delete`} className={styles.default_td_th}>
                     <Button content="Delete" color={ButtonColor.RED} onClick={(e) => props.onDeleteClick!(e, items.at(0))} />
+                  </td>
+                }
+                {
+                  props.onUpdateClick !== undefined &&
+                  <td key={`table-body-row-${idx}-actions-update`} className={styles.default_td_th}>
+                    <Button content="Update" color={ButtonColor.BLUE} onClick={(e) => props.onUpdateClick!(e, items.at(0))} />
                   </td>
                 }
               </tr>

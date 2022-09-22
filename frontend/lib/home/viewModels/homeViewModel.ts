@@ -17,6 +17,7 @@ export interface IUseHomeViewModel {
   tableItems: TableProps,
   onAddNewNoteClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
   onDeleteNoteClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => void,
+  onUpdateNoteClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => void,
   onModalCancelClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, modalType: ModalType) => void,
   onModalConfirmClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, modalType: ModalType) => void,
 }
@@ -30,7 +31,8 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase, delete
   const [todoItems, setTodoItems] = useState<TodoItem[]>([])
   const [tableItems, setTableItems] = useState<TableProps>({ headers: [], body: [] })
 
-  const deleteNoteRef = useRef<number | null >(null)
+  const deleteNoteRef = useRef<number | null>(null)
+  const updateNoteRef = useRef<number | null>(null)
 
   useEffect(() => {
     const getAllTodoItems = async () => {
@@ -57,6 +59,12 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase, delete
     setShowModal({ ...showModal, ADD_NOTE_MODAL: true })
   }
 
+  const onUpdateNoteClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
+    e.preventDefault()
+    updateNoteRef.current = id
+    setShowModal({ ...showModal, UPDATE_NODE_MODAL: true })
+  }
+
   const onDeleteNoteClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
     e.preventDefault()
     deleteNoteRef.current = id
@@ -71,7 +79,7 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase, delete
   const onModalConfirmClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, modalType: ModalType) => {
     e.preventDefault()
 
-    switch(modalType) {
+    switch (modalType) {
       case ModalType.ADD_NOTE_MODAL: {
         await _addNewNote()
         break
@@ -80,11 +88,15 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase, delete
         await _deleteNote()
         break
       }
+      case ModalType.UPDATE_NODE_MODAL: {
+        await _updateNote()
+        break
+      }
       default: {
         break
       }
     }
-    
+
     setShowModal({ ...showModal, [ModalType[modalType]]: false })
   }
 
@@ -111,12 +123,17 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase, delete
     setTodoItems(todoItemsClones)
   }
 
+  const _updateNote = async () => {
+    console.log('will be updated')
+  }
+
   return {
     showModal,
     todoItems,
     tableItems,
     onAddNewNoteClick,
     onDeleteNoteClick,
+    onUpdateNoteClick,
     onModalCancelClick,
     onModalConfirmClick,
   }
