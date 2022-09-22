@@ -2,7 +2,8 @@ import styles from './index.module.css'
 
 export enum ButtonColor {
   RED,
-  GREEN
+  GREEN,
+  BLUE
 }
 
 type ButtonProps = {
@@ -14,10 +15,20 @@ type ButtonProps = {
 
 const Button = (props: ButtonProps) => {
   const getColor = (): string => {
-    if(props.color === undefined) {
-      return styles.green_button
+    switch(props.color) {
+      case ButtonColor.GREEN: {
+        return styles.green_button
+      }
+      case ButtonColor.BLUE: {
+        return styles.blue_button
+      }
+      case ButtonColor.RED: {
+        return styles.red_button
+      }
+      default: {
+        return styles.green_button
+      }
     }
-    return props.color === ButtonColor.GREEN ? styles.green_button : styles.red_button
   }
 
   return (
