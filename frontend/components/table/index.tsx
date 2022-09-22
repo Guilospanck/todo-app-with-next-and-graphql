@@ -34,15 +34,15 @@ const Table = (props: TableProps) => {
 
                 {/* Actions */}
                 {
-                  props.onDeleteClick !== undefined &&
-                  <td key={`table-body-row-${idx}-actions-delete`} className={styles.default_td_th}>
-                    <Button content="Delete" color={ButtonColor.RED} onClick={(e) => props.onDeleteClick!(e, items.at(0))} />
-                  </td>
-                }
-                {
-                  props.onUpdateClick !== undefined &&
-                  <td key={`table-body-row-${idx}-actions-update`} className={styles.default_td_th}>
-                    <Button content="Update" color={ButtonColor.BLUE} onClick={(e) => props.onUpdateClick!(e, items.at(0))} />
+                  <td key={`table-body-row-${idx}-actions`} className={styles.default_td_th}>
+                    {
+                      props.onDeleteClick !== undefined &&
+                      <Button content="Delete" color={ButtonColor.RED} onClick={(e) => props.onDeleteClick!(e, items.at(0))} />
+                    }
+                    {
+                      props.onUpdateClick !== undefined &&
+                      <Button content="Update" color={ButtonColor.BLUE} onClick={(e) => props.onUpdateClick!(e, items.at(0))} />
+                    }
                   </td>
                 }
               </tr>
