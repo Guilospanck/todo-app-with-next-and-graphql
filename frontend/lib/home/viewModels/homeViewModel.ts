@@ -26,7 +26,7 @@ type ShowModal = {
 }
 
 const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase, deleteNoteUsecase }: HomeViewModelProps): IUseHomeViewModel => {
-  const [showModal, setShowModal] = useState<ShowModal>({ ADD_NOTE_MODAL: false, DELETE_NODE_MODAL: false })
+  const [showModal, setShowModal] = useState<ShowModal>({ ADD_NOTE_MODAL: false, DELETE_NODE_MODAL: false, UPDATE_NODE_MODAL: false })
   const [todoItems, setTodoItems] = useState<TodoItem[]>([])
   const [tableItems, setTableItems] = useState<TableProps>({ headers: [], body: [] })
 

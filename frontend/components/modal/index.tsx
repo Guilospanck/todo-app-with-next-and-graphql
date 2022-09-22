@@ -2,7 +2,8 @@ import styles from './index.module.css'
 
 export enum ModalType {
   ADD_NOTE_MODAL,
-  DELETE_NODE_MODAL
+  DELETE_NODE_MODAL,
+  UPDATE_NODE_MODAL
 }
 
 export type ModalProps = {
@@ -16,6 +17,21 @@ export type ModalProps = {
 }
 
 const Modal = (props: ModalProps) => {
+
+  const getStyleForDifferentModalTypes = (): string => {
+    switch(props.modalType) {
+      case ModalType.ADD_NOTE_MODAL: {
+        return styles.add_note_confirm_btn
+      }
+      case ModalType.DELETE_NODE_MODAL: {
+        return styles.delete_note_confirm_btn
+      }
+      case ModalType.UPDATE_NODE_MODAL: {
+        return styles.update_note_confirm_btn
+      }
+    }
+  }
+
   return (
     <div id="defaultModal" tabIndex={-1} aria-hidden="false" data-modal-placement="center-center" className="justify-center items-center flex overflow-y-auto overflow-x-hidden z-50 w-full md:inset-0 h-modal md:h-full">
       <div className="p-4 w-full max-w-2xl h-full md:h-auto">
@@ -41,7 +57,7 @@ const Modal = (props: ModalProps) => {
 
           {/* Footer */}
           <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
-            <button onClick={(e) => props.onConfirmClick(e, props.modalType)} type="button" className={props.modalType === ModalType.ADD_NOTE_MODAL ? styles.add_note_confirm_btn : styles.delete_note_confirm_btn}>{props.confirmTitle}</button>
+            <button onClick={(e) => props.onConfirmClick(e, props.modalType)} type="button" className={getStyleForDifferentModalTypes()}>{props.confirmTitle}</button>
             <button onClick={(e) => props.onCancelClick(e, props.modalType)} type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">{props.cancelTitle}</button>
           </div>
         </div>
