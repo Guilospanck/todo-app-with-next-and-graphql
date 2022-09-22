@@ -10,6 +10,7 @@ scalar DateTime
 type Mutation {
   deleteNote(id: Int!): Note!
   postNote(description: String, title: String!): Note!
+  updateNote(description: String, id: Int!, title: String): Note!
 }
 
 type Note {

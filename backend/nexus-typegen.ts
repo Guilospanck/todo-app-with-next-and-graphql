@@ -70,6 +70,7 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     deleteNote: NexusGenRootTypes['Note']; // Note!
     postNote: NexusGenRootTypes['Note']; // Note!
+    updateNote: NexusGenRootTypes['Note']; // Note!
   }
   Note: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -88,6 +89,7 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     deleteNote: 'Note'
     postNote: 'Note'
+    updateNote: 'Note'
   }
   Note: { // field return type name
     createdAt: 'DateTime'
@@ -110,6 +112,11 @@ export interface NexusGenArgTypes {
     postNote: { // args
       description?: string | null; // String
       title: string; // String!
+    }
+    updateNote: { // args
+      description?: string | null; // String
+      id: number; // Int!
+      title?: string | null; // String
     }
   }
 }

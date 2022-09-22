@@ -1,3 +1,4 @@
+import { UserInputError } from 'apollo-server-express'
 import { extendType, intArg, nonNull, objectType, stringArg } from 'nexus'
 
 export const Note = objectType({
@@ -52,6 +53,34 @@ export const NoteMutation = extendType({
         return context.prisma.note.delete({
           where: {
             id: args.id
+          }
+        })
+      }
+    })
+
+    t.nonNull.field('updateNote', {
+      type: 'Note',
+      args: {
+        id: nonNull(intArg()),
+        title: stringArg(),
+        description: stringArg()
+      },
+      async resolve(_parent, args, context, _info) {
+        const { id, title, description } = args
+
+        // verify if id exists
+        const note = await context.prisma.note.findUnique({ where: { id } })
+        if(note === null) {
+          throw new UserInputError('Note with this ID is non-existent')
+        }
+
+        return context.prisma.note.update({
+          where: {
+            id: args.id
+          },
+          data: {
+            title: args.title ?? note.title,
+            description: args.description ?? note.description
           }
         })
       }
