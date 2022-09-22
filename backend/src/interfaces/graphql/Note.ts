@@ -18,8 +18,8 @@ export const NoteQuery = extendType({
   definition(t) {
     t.list.field('getAllNotes', {
       type: 'Note',
-      async resolve(parent, args, context) {
-        return context.prisma.note.findMany()
+      async resolve(_parent, _args, context) {
+        return await context.prisma.note.findMany()
       }
     })
   },
@@ -34,8 +34,8 @@ export const NoteMutation = extendType({
         title: nonNull(stringArg()),
         description: stringArg(),
       },
-      async resolve(parent, args, context) {
-        return context.prisma.note.create({
+      async resolve(_parent, args, context) {
+        return await context.prisma.note.create({
           data: {
             description: args.description,
             title: args.title
@@ -49,8 +49,8 @@ export const NoteMutation = extendType({
       args: {
         id: nonNull(intArg())
       },
-      async resolve(parent, args, context, info) {
-        return context.prisma.note.delete({
+      async resolve(_parent, args, context, _info) {
+        return await context.prisma.note.delete({
           where: {
             id: args.id
           }
@@ -74,15 +74,18 @@ export const NoteMutation = extendType({
           throw new UserInputError('Note with this ID is non-existent')
         }
 
-        return context.prisma.note.update({
-          where: {
-            id: args.id
-          },
+        await context.prisma.note.update({
+          where: { id },
           data: {
-            title: args.title ?? note.title,
-            description: args.description ?? note.description
-          }
+            id,
+            title: title || note.title,
+            description: description || note.description
+          },
         })
+
+        const result = await context.prisma.note.findUnique({ where: { id } })
+
+        return result!
       }
     })
   },
