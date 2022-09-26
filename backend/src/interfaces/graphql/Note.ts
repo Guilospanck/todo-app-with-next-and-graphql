@@ -79,7 +79,7 @@ export const NoteMutation = extendType({
           data: {
             id,
             title: title || note.title,
-            description: description || note.description
+            description: description
           },
         })
 

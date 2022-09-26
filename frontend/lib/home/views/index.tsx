@@ -71,10 +71,20 @@ const HomeView = ({ viewModel }: HomeViewProps) => {
 
     const body =
       <form className="flex flex-col gap-2">
-        <label className="text-sm">Title</label>
-        <input id="title" type={'text'} className="appearance-none border rounded py-1 px-3 leading-tight focus:outline-none focus:shadow-outline" />
+        <label className="text-sm">Title*</label>
+        <input
+          id="title"
+          type={'text'}
+          className="appearance-none border rounded py-1 px-3 leading-tight focus:outline-none focus:shadow-outline"
+          defaultValue={viewModel.currentSelectedNote.current?.title}
+        />
         <label className="text-sm">Description</label>
-        <input id="description" type={'text'} className="appearance-none border rounded py-1 px-3 leading-tight focus:outline-none focus:shadow-outline" />
+        <input
+          id="description"
+          type={'text'}
+          className="appearance-none border rounded py-1 px-3 leading-tight focus:outline-none focus:shadow-outline"
+          defaultValue={viewModel.currentSelectedNote.current?.description}
+        />
       </form>
 
     return {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { MutableRefObject, useEffect, useRef, useState } from "react"
 import { ModalType } from "../../../components/modal"
 import { TableProps } from "../../../components/table"
 import { TodoItem } from "../types/todoitem"
@@ -20,6 +20,7 @@ export interface IUseHomeViewModel {
   onUpdateNoteClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => void,
   onModalCancelClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, modalType: ModalType) => void,
   onModalConfirmClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, modalType: ModalType) => void,
+  currentSelectedNote: MutableRefObject<TodoItem | null | undefined>
 }
 
 export type ShowModal = {
@@ -31,8 +32,7 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase, delete
   const [todoItems, setTodoItems] = useState<TodoItem[]>([])
   const [tableItems, setTableItems] = useState<TableProps>({ headers: [], body: [] })
 
-  const deleteNoteRef = useRef<number | null>(null)
-  const updateNoteRef = useRef<number | null>(null)
+  const currentSelectedNote = useRef<TodoItem | undefined | null>(null)
 
   useEffect(() => {
     const getAllTodoItems = async () => {
@@ -61,13 +61,15 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase, delete
 
   const onUpdateNoteClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
     e.preventDefault()
-    updateNoteRef.current = id
+    const todoItemToBeUpdated = todoItems.find(item => Number(item.id) === id)
+    currentSelectedNote.current = todoItemToBeUpdated
     setShowModal({ ...showModal, UPDATE_NODE_MODAL: true })
   }
 
   const onDeleteNoteClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
     e.preventDefault()
-    deleteNoteRef.current = id
+    const todoItemToBeUpdated = todoItems.find(item => Number(item.id) === id)
+    currentSelectedNote.current = todoItemToBeUpdated
     setShowModal({ ...showModal, DELETE_NODE_MODAL: true })
   }
 
@@ -117,26 +119,32 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase, delete
   }
 
   const _deleteNote = async () => {
-    await deleteNoteUsecase.deleteNote(deleteNoteRef.current as number)
+    const id = Number(currentSelectedNote.current!.id)
+    await deleteNoteUsecase.deleteNote(id)
     let todoItemsClones: TodoItem[] = JSON.parse(JSON.stringify(todoItems))
-    todoItemsClones = todoItemsClones.filter(item => Number(item.id) !== deleteNoteRef.current as number)
+    todoItemsClones = todoItemsClones.filter(item => Number(item.id) !== id)
     setTodoItems(todoItemsClones)
   }
 
   const _updateNote = async () => {
+    const [defaultTitle, defaultDescription] = [currentSelectedNote.current?.title, currentSelectedNote.current?.description]
     const title = (document.getElementById("title") as HTMLInputElement)?.value
     const description = (document.getElementById("description") as HTMLInputElement)?.value
 
-    if ((!title || title?.length === 0) && (!description || description?.length === 0)) {
-      alert('You need to provide some info.')
+    if ((!title || title?.length === 0)) {
+      alert('Title is required.')
       return
     }
 
-    const id = updateNoteRef.current
+    if(title === defaultTitle && description === defaultDescription) {
+      return
+    }
 
-    const result = await createUpdateNoteUsecase.update(id as number, title, description)
+    const id = currentSelectedNote.current?.id!
+
+    const result = await createUpdateNoteUsecase.update(Number(id), title, description)
     const todoItemsClone: TodoItem[] = JSON.parse(JSON.stringify(todoItems))
-    todoItemsClone.filter(item => Number(item.id) === id).map(item => {
+    todoItemsClone.filter(item => item.id === id).map(item => {
       item.title = result.title
       item.description = result.description
     })
@@ -153,6 +161,7 @@ const useHomeViewModel = ({ getTodoItemsUsecase, createUpdateNoteUsecase, delete
     onUpdateNoteClick,
     onModalCancelClick,
     onModalConfirmClick,
+    currentSelectedNote
   }
 }
 
